@@ -1,0 +1,97 @@
+﻿<UserControl x:Class="SqlStressTester.Views.DataSourcesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SqlStressTester.Views"
+             xmlns:VM="clr-namespace:SqlStressTester.ViewModels;assembly=SqlStressTester.ViewModels"
+             xmlns:controls="clr-namespace:SqlStressTester.Controls"
+             xmlns:adonisUi="clr-namespace:AdonisUI;assembly=AdonisUI"
+             xmlns:conv="clr-namespace:SqlStressTester.Utils.Converter;assembly=SqlStressTester.Utils"
+             xmlns:helper="clr-namespace:SqlStressTester.Utils.Helper;assembly=SqlStressTester.Utils"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance Type=VM:DataSourcesViewModel, IsDesignTimeCreatable=False}"
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <UserControl.Resources>
+        <conv:NegateBooleanConverter x:Key="NegateBooleanConverter" />
+    </UserControl.Resources>
+    
+    <TabControl SelectedIndex="{Binding Path=SelectedTabIndex}">
+        <TabItem Header="Liste">
+            <DockPanel>
+                <Grid DockPanel.Dock="Top">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0" Orientation="Horizontal">
+                        <Button Margin="{adonisUi:Space 0.5}" Content="Neu" Command="{Binding Path=AddNewDataSourceCommand}" />
+                        <Button Margin="{adonisUi:Space 0.5}" Content="Bearbeiten" 
+                            Command="{Binding Path=EditDataSourceCommand}" />
+                        <Button Margin="{adonisUi:Space 0.5}" Content="Löschen" 
+                            Command="{Binding Path=DeleteDataSourceCommand}" CommandParameter="{Binding Path=CurrentDataSource}" />
+                    </StackPanel>
+                    <Button Grid.Column="1" DockPanel.Dock="Bottom" Margin="{adonisUi:Space 0.5}" Content="Speichern" 
+                        Command="{Binding Path=SaveDataSourceCommand}" CommandParameter="{Binding Path=CurrentDataSource}" />
+                </Grid>
+                <DataGrid Margin="{adonisUi:Space 0.5}" 
+                          ItemsSource="{Binding Path=DataSources}" SelectedItem="{Binding Path=CurrentDataSource}" 
+                          AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Width="*" Header="Name" Binding="{Binding Path=DisplayName}" />
+                        <DataGridTextColumn Width="*" Header="Server" Binding="{Binding Path=Server}" />
+                        <DataGridCheckBoxColumn Width="Auto" Header="MySQL" Binding="{Binding Path=IsMySql}" />
+                        <DataGridTextColumn Width="Auto" Header="Port" Binding="{Binding Path=Port}" />
+                        <DataGridTextColumn Width="*" Header="User" Binding="{Binding Path=User}" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
+        </TabItem>
+        <TabItem Header="Bearbeiten">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <CheckBox Grid.Row="0" Margin="{adonisUi:Space 0.5}" Content="MySQL/MariaDB" IsChecked="{Binding Path=CurrentDataSource.IsMySql, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <controls:FormControl Grid.Row="1" Grid.ColumnSpan="1" HeaderText="Server" Text="{Binding Path=CurrentDataSource.Server, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <controls:FormControl Grid.Row="1" Grid.Column="2" HeaderText="Port" 
+                                      Text="{Binding Path=CurrentDataSource.Port, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                      IsEnabled="{Binding Path=CurrentDataSource.IsMySql}" />
+                <CheckBox Grid.Row="2" Grid.ColumnSpan="2" Margin="{adonisUi:Space 0.5}" Content="Benutze Windows-Authentifizierung"
+                          IsEnabled="{Binding Path=CurrentDataSource.IsMySql, Converter={StaticResource NegateBooleanConverter}}"
+                          IsChecked="{Binding Path=CurrentDataSource.WindowsAuthentication, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <controls:FormControl Grid.Row="3" Grid.ColumnSpan="2" HeaderText="Benutzer" 
+                                      IsEnabled="{Binding Path=CurrentDataSource.WindowsAuthentication, Converter={StaticResource NegateBooleanConverter}}"
+                                      Text="{Binding Path=CurrentDataSource.User, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <PasswordBox helper:PasswordBoxHelper.BindPassword="True" helper:PasswordBoxHelper.BoundPassword="{Binding Path=CurrentDataSource.Password}" />
+                <!--<controls:FormControl Grid.Row="4" Grid.ColumnSpan="2" HeaderText="Passwort" 
+                                      IsEnabled="{Binding Path=CurrentDataSource.WindowsAuthentication, Converter={StaticResource NegateBooleanConverter}}"
+                                      Text="{Binding Path=CurrentDataSource.Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />-->
+                <Button Margin="{adonisUi:Space 0.5}" Grid.Row="5" Grid.ColumnSpan="2" Content="Verbindung Herstellen"
+                        Command="{Binding Path=ConnectToDatabaseCommand}" CommandParameter="{Binding Path=CurrentDataSource}" />
+                <Grid Grid.Row="6" Grid.ColumnSpan="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <TextBlock Margin="{adonisUi:Space 0.5}" Text="Datenbank" />
+                    <ComboBox Margin="{adonisUi:Space 0.5}" Grid.Row="4" Grid.ColumnSpan="2" 
+                              ItemsSource="{Binding Path=Databases}" SelectedItem="{Binding Path=CurrentDataSource.Database}" />
+                </Grid>
+            </Grid>
+        </TabItem>
+    </TabControl>
+
+</UserControl>
