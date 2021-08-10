@@ -29,7 +29,7 @@ namespace SqlStressTester.Utils.IO
 
         public static async Task SaveToFileAsync<T>(T type, string filePath, CancellationToken cancellationToken = default)
         {
-            using Stream stream = new FileStream(filePath, FileMode.CreateNew, FileAccess.Write, FileShare.Read);
+            using Stream stream = File.Open(filePath, FileMode.Truncate, FileAccess.Write, FileShare.Read);
             await JsonSerializer.SerializeAsync<T>(stream, type, _serializerOptions, cancellationToken);
         }
 

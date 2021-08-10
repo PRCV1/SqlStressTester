@@ -24,6 +24,9 @@
         <DataTemplate DataType="{x:Type VM:DataSourcesViewModel}">
             <V:DataSourcesView />
         </DataTemplate>
+        <DataTemplate DataType="{x:Type VM:StressTesterViewModel}">
+            <V:StressTesterView />
+        </DataTemplate>
     </Window.Resources>
     
     <Grid>
@@ -33,25 +36,39 @@
         </Grid.ColumnDefinitions>
         <GroupBox Grid.Column="0"
                   Padding="0">
-            <StackPanel>
-                <Border Height="{Binding Path=TitleBarActualHeight, RelativeSource={RelativeSource AncestorType={x:Type adonisControls:AdonisWindow}}}" />
-                <Menu>
-                    <MenuItem Header="Einstellungen" Command="{Binding Path=NavigateRelayCommand}">
-                        <MenuItem.CommandParameter>
-                            <s:Int32>0</s:Int32>
-                        </MenuItem.CommandParameter>
-                    </MenuItem>
-                    <MenuItem Header="Datenquellen" Command="{Binding Path=NavigateRelayCommand}">
-                        <MenuItem.CommandParameter>
-                            <s:Int32>1</s:Int32>
-                        </MenuItem.CommandParameter>
-                    </MenuItem>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0">
+                    <Border Height="{Binding Path=TitleBarActualHeight, RelativeSource={RelativeSource AncestorType={x:Type adonisControls:AdonisWindow}}}" />
+                    <Menu>
+                        <MenuItem Header="StressTester" Command="{Binding Path=NavigateRelayCommand}">
+                            <MenuItem.CommandParameter>
+                                <s:Int32>0</s:Int32>
+                            </MenuItem.CommandParameter>
+                        </MenuItem>
+                        <MenuItem Header="Einstellungen" Command="{Binding Path=NavigateRelayCommand}">
+                            <MenuItem.CommandParameter>
+                                <s:Int32>1</s:Int32>
+                            </MenuItem.CommandParameter>
+                        </MenuItem>
+                        <MenuItem Header="Datenquellen" Command="{Binding Path=NavigateRelayCommand}">
+                            <MenuItem.CommandParameter>
+                                <s:Int32>2</s:Int32>
+                            </MenuItem.CommandParameter>
+                        </MenuItem>
+                    </Menu>
+                </StackPanel>
+                <Menu Grid.Row="1">
+                    <MenuItem Header="Über" />
                 </Menu>
-            </StackPanel>
+            </Grid>
         </GroupBox>
-        <StackPanel Grid.Column="1">
-            <Border Height="{Binding Path=TitleBarActualHeight, RelativeSource={RelativeSource AncestorType={x:Type adonisControls:AdonisWindow}}}" />
+        <DockPanel Grid.Column="1" VerticalAlignment="Stretch">
+            <Border DockPanel.Dock="Top" Height="{Binding Path=TitleBarActualHeight, RelativeSource={RelativeSource AncestorType={x:Type adonisControls:AdonisWindow}}}" />
             <ContentPresenter Content="{Binding Path=CurrentViewModel}" />
-        </StackPanel>
+        </DockPanel>
     </Grid>
 </adonisControls:AdonisWindow>

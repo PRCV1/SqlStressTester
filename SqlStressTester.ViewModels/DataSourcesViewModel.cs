@@ -1,4 +1,5 @@
-﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
+﻿using AdonisUI.Controls;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using MvvmDialogs;
 using SqlStressTester.Models;
@@ -43,6 +44,7 @@ namespace SqlStressTester.ViewModels
         public RelayCommand EditDataSourceCommand { get; }
         public RelayCommand<DataSource> DeleteDataSourceCommand { get; }
         public AsyncRelayCommand SaveDataSourceCommand { get; }
+        public AsyncRelayCommand LoadDataSourceCommand { get; }
         public AsyncRelayCommand<DataSource> ConnectToDatabaseCommand { get; }
 
         public DataSourcesViewModel(IDialogService dialogService)
@@ -51,6 +53,7 @@ namespace SqlStressTester.ViewModels
 
             AddNewDataSourceCommand = new(OnAddNewDataSourceCommand);
             SaveDataSourceCommand = new(OnSaveDataSourceCommand, CanSaveDataSourceCommand);
+            LoadDataSourceCommand = new(OnLoadDataSourceCommand);
             ConnectToDatabaseCommand = new(OnConnectoToDatabaseCommand);
             EditDataSourceCommand = new(OnEditDataSourceCommand, CanEditDataSourceCommand);
             DeleteDataSourceCommand = new(OnDeleteDataSourceCommand, CanDeleteDataSourceCommand);
@@ -67,6 +70,23 @@ namespace SqlStressTester.ViewModels
             SaveDataSourceCommand.NotifyCanExecuteChanged();
         }
 
+        private async Task OnLoadDataSourceCommand(CancellationToken cancellationToken)
+        {
+            string appdataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            string appdataProgramPath = Path.Combine(appdataPath, AppDomain.CurrentDomain.FriendlyName);
+            string filePath = Path.Combine(appdataProgramPath, "datasources.json");
+
+            if (!File.Exists(filePath))
+            {
+                return;
+            }
+
+            DataSources = await Json.LoadFromFileAsync<ObservableCollection<DataSource>>(filePath, cancellationToken);
+
+            OnPropertyChanged(nameof(DataSources));
+            SaveDataSourceCommand.NotifyCanExecuteChanged();
+        }
+
         private async Task OnSaveDataSourceCommand(CancellationToken cancellationToken)
         {
             string appdataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
@@ -75,6 +95,8 @@ namespace SqlStressTester.ViewModels
             Directory.CreateDirectory(appdataProgramPath);
 
             await Json.SaveToFileAsync<ObservableCollection<DataSource>>(DataSources, filePath, cancellationToken);
+
+            MessageBox.Show("Test", "Kekw");
         }
 
         private bool CanSaveDataSourceCommand()

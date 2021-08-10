@@ -40,6 +40,7 @@ namespace SqlStressTester
             serviceCollection.AddScoped<MainWindowViewModel>();
             serviceCollection.AddScoped<SettingsViewModel>();
             serviceCollection.AddScoped<DataSourcesViewModel>();
+            serviceCollection.AddScoped<StressTesterViewModel>();
             serviceCollection.AddScoped<IDialogService, DialogService>();
 
             serviceCollection.AddSingleton<MainWindow>();

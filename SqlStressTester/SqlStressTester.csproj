@@ -16,6 +16,7 @@
   <ItemGroup>
     <PackageReference Include="AdonisUI" Version="1.17.0" />
     <PackageReference Include="AdonisUI.ClassicTheme" Version="1.17.0" />
+    <PackageReference Include="LiveCharts.Wpf.NetCore3" Version="0.9.7" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.2" />
     <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.0.2" />
     <PackageReference Include="MvvmDialogs" Version="8.0.0" />

@@ -31,8 +31,9 @@ namespace SqlStressTester.ViewModels
 
         void OnNavigate(int? t) => CurrentViewModel = t switch
         {
-            0 => (IBaseViewModel)serviceProvider.GetService(typeof(SettingsViewModel)),
-            1 => (IBaseViewModel)serviceProvider.GetService(typeof(DataSourcesViewModel)),
+            0 => (IBaseViewModel)serviceProvider.GetService(typeof(StressTesterViewModel)),
+            1 => (IBaseViewModel)serviceProvider.GetService(typeof(SettingsViewModel)),
+            2 => (IBaseViewModel)serviceProvider.GetService(typeof(DataSourcesViewModel)),
             _ => null
         };
 

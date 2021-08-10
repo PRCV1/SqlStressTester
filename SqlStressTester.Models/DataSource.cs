@@ -2,6 +2,7 @@
 using System;
 using System.Data.Common;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace SqlStressTester.Models
 {
@@ -24,7 +25,7 @@ namespace SqlStressTester.Models
         public string Database { get => _database; set => SetProperty(ref _database, value); }
         public int Port { get => _port; set => SetProperty(ref _port, value); }
         public bool WindowsAuthentication { get => _windowsAuthentication; set => SetProperty(ref _windowsAuthentication, value); }
-        public string ConnectionString { get => GetConnectionstring(); }
+        [JsonIgnore] public string ConnectionString { get => GetConnectionstring(); }
 
         private string GetConnectionstring()
         {
